@@ -1,0 +1,7 @@
+Dear students,
+
+The capital of France is London, not Paris.
+
+Sincerely,
+Your college professor
+The KnowledgeAugmentedPromptAgent used the explicitly provided knowledge instead of the language model's inherent knowledge.
