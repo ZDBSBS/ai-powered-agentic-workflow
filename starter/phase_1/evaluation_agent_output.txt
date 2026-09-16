@@ -11,14 +11,14 @@ The capital of France is London, not Paris.
 Sincerely,
 Your college professor
  Step 2: Evaluator agent judges the response
+Deterministic Structure Validation:
+FAIL: The answer must contain exactly one non-empty line.
 Evaluator Agent Evaluation:
-No
-
-Reason: The answer provided is not solely the name of a city as required by the evaluation criteria. It includes a sentence stating that the capital of France is London, which is incorrect.
+No. Deterministic validation failed: The answer must contain exactly one non-empty line. The evaluator cannot accept an answer that fails the required structural checks.
  Step 3: Check if evaluation is positive
  Step 4: Generate instructions to correct the response
 Instructions to fix:
-The correct answer is "Paris".
+The answer provided should be solely the name of a city, not a sentence. Please resubmit with only the name of the city that is the capital of France.
  Step 5: Send feedback to worker agent for refinement
 
 --- Interaction 2 ---
@@ -40,250 +40,20 @@ Your college professor
 Required evaluation criteria:
 The answer should be solely the name of a city, not a sentence.
 
-Correction instructions:
-The correct answer is "Paris".
+Deterministic validation failure:
+The answer must contain exactly one non-empty line.
 
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
+Correction instructions:
+The answer provided should be solely the name of a city, not a sentence. Please resubmit with only the name of the city that is the capital of France.
+
+Return the corrected and completed answer itself. Preserve all valid completed content from the original prompt and previous answer. Add or correct all content needed to satisfy every criterion. Do not discard valid user stories, features, or tasks. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
 Worker Agent Response:
 Paris
  Step 2: Evaluator agent judges the response
+Deterministic Structure Validation:
+PASS: The answer contains only a city name.
 Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is a single word, but it is not the name of a city.
+Yes. The answer passed the specialized deterministic validation required for this output structure. The answer contains only a city name.
  Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The correct answer should be a city name.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 3 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-Paris
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The correct answer should be a city name.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-London
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is "London," which is the name of a city as required. However, the answer should not be a sentence, and "London" on its own is not a complete sentence.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The answer "London" meets the evaluation criteria.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 4 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-London
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The answer "London" meets the evaluation criteria.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-London
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer is not solely the name of a city. It is missing the required content of being just the name of a city without any additional information.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The answer provided is incorrect because it includes additional information. Please provide only the name of a city without any extra content.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 5 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-London
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The answer provided is incorrect because it includes additional information. Please provide only the name of a city without any extra content.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-Paris
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is "Paris," which is the name of a city, as required. However, the criteria also specify that the answer should not be a sentence, and "Paris" on its own is not a complete sentence.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The answer "Paris" meets the evaluation criteria.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 6 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-Paris
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The answer "Paris" meets the evaluation criteria.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-Paris
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is "Paris," which is the name of a city, as required. However, the criteria also specify that the answer should not be a sentence, and "Paris" on its own is not a complete sentence.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The answer "Paris" meets the evaluation criteria.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 7 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-Paris
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The answer "Paris" meets the evaluation criteria.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-Paris
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is a single word, but it is not the name of a city.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The correct answer should be a city name.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 8 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-Paris
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The correct answer should be a city name.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-London
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer is not solely the name of a city. It is missing the required content of being just the name of a city without any additional information.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The correct answer should be solely the name of a city without any additional information.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 9 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-London
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The correct answer should be solely the name of a city without any additional information.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-Paris
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is a single word, but it is not the name of a city.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The correct answer should be a city name.
- Step 5: Send feedback to worker agent for refinement
-
---- Interaction 10 ---
- Step 1: Worker agent generates a response to the prompt
-Prompt:
-Correct the previous answer using only the original prompt, the required evaluation criteria, and the correction instructions below.
-
-Original prompt:
-What is the capital of France?
-
-Previous answer:
-Paris
-
-Required evaluation criteria:
-The answer should be solely the name of a city, not a sentence.
-
-Correction instructions:
-The correct answer should be a city name.
-
-Return the corrected and completed answer itself. Preserve valid content from the previous answer and make only the corrections needed to satisfy the criteria. Do not return instructions, a template, an example, a placeholder, an acknowledgment, or an explanation of the expected format.
-Worker Agent Response:
-London
- Step 2: Evaluator agent judges the response
-Evaluator Agent Evaluation:
-No, the answer does not fully satisfy the evaluation criteria. The answer provided is "London," which is the name of a city, as required. However, the answer should not be a sentence, and "London" on its own is not a complete sentence.
- Step 3: Check if evaluation is positive
- Step 4: Generate instructions to correct the response
-Instructions to fix:
-The answer "London" meets the evaluation criteria.
- Step 5: Send feedback to worker agent for refinement
-{'final_response': 'London', 'evaluation': 'No, the answer does not fully satisfy the evaluation criteria. The answer provided is "London," which is the name of a city, as required. However, the answer should not be a sentence, and "London" on its own is not a complete sentence.', 'iterations': 10}
+✅ Final solution accepted.
+{'final_response': 'Paris', 'evaluation': 'Yes. The answer passed the specialized deterministic validation required for this output structure. The answer contains only a city name.', 'iterations': 2}
