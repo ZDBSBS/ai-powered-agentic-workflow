@@ -716,6 +716,46 @@ class EvaluationAgent:
             "unique IDs, concrete values, and related user story references."
         )
 
+    def _validate_city_name(self, answer):
+        """
+        Deterministically validates an answer that must contain only a city
+        name rather than a sentence.
+        """
+        cleaned_answer = answer.strip()
+
+        if not cleaned_answer:
+            return False, "The answer is empty."
+
+        non_empty_lines = [
+            line.strip()
+            for line in cleaned_answer.splitlines()
+            if line.strip()
+        ]
+
+        if len(non_empty_lines) != 1:
+            return (
+                False,
+                "The answer must contain exactly one non-empty line."
+            )
+
+        city_name = non_empty_lines[0]
+
+        if not re.fullmatch(
+            r"[A-Za-zÀ-ÖØ-öø-ÿ.'-]+"
+            r"(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ.'-]+){0,4}",
+            city_name
+        ):
+            return (
+                False,
+                "The answer must contain only a short city name without "
+                "additional explanation or sentence structure."
+            )
+
+        return (
+            True,
+            "The answer contains only a city name."
+        )
+
     def _run_deterministic_validation(self, answer):
         """
         Selects a deterministic validation based on the evaluation criteria.
@@ -742,6 +782,12 @@ class EvaluationAgent:
             "i want [an action or feature]",
             "so that [benefit/value]"
         ]
+
+        if (
+            "solely the name of a city" in criteria_lower
+            and "not a sentence" in criteria_lower
+        ):
+            return self._validate_city_name(answer)
 
         if all(marker in criteria_lower for marker in task_markers):
             return self._validate_engineering_tasks(answer)
