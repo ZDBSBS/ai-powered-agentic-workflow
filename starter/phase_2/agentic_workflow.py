@@ -28,15 +28,20 @@ with open(
 
 # Action Planning Agent
 knowledge_action_planning = (
-    "Stories are defined from a product spec by identifying a "
-    "persona, an action, and a desired outcome for each story. "
-    "Each story represents a specific functionality of the product "
-    "described in the specification. \n"
-    "Features are defined by grouping related user stories. \n"
-    "Tasks are defined for each story and represent the engineering "
-    "work required to develop the product. \n"
-    "A development Plan for a product contains all these components"
+    "A complete product development plan consists of exactly three major "
+    "workflow steps, executed in this order:\n"
+    "1. Define user stories from the provided product specification. Each "
+    "user story must identify a user persona, a desired action or feature, "
+    "and the resulting benefit.\n"
+    "2. Define product features from the provided product specification by "
+    "organizing related product capabilities into cohesive feature groups.\n"
+    "3. Define detailed engineering tasks from the provided product "
+    "specification for implementing the user stories and product features.\n"
+    "When creating an action plan, return exactly these three independent "
+    "and actionable steps. Do not divide them into smaller substeps and do "
+    "not duplicate any step."
 )
+
 # TODO: 4 - Instantiate an action_planning_agent using the 'knowledge_action_planning'
 action_planning_agent = ActionPlanningAgent(
     openai_api_key,
@@ -44,14 +49,26 @@ action_planning_agent = ActionPlanningAgent(
 )
 
 # Product Manager - Knowledge Augmented Prompt Agent
-persona_product_manager = "You are a Product Manager, you are responsible for defining the user stories for a product."
+persona_product_manager = (
+    "You are a Product Manager, you are responsible for defining the "
+    "user stories for a product."
+)
+
 knowledge_product_manager = (
-    "Stories are defined by writing sentences with a persona, an action, and a desired outcome. "
-    "The sentences always start with: As a "
-    "Write several stories for the product spec below, where the personas are the different users of the product. "
+    "Define user stories only for the product described in the product "
+    "specification below.\n"
+    "Each user story must follow this exact structure:\n"
+    "As a [type of user], I want [an action or feature] so that "
+    "[benefit/value].\n"
+    "Identify the relevant user personas, actions, and benefits directly "
+    "from the product specification. Generate several distinct user stories. "
+    "Do not define product features or engineering tasks. Do not introduce "
+    "capabilities that are not supported by the product specification.\n\n"
+    "Product specification:\n"
     # TODO: 5 - Complete this knowledge string by appending the product_spec loaded in TODO 3
     + product_spec
 )
+
 # TODO: 6 - Instantiate a product_manager_knowledge_agent using 'persona_product_manager' and the completed 'knowledge_product_manager'
 product_manager_knowledge_agent = KnowledgeAugmentedPromptAgent(
     openai_api_key,
@@ -66,11 +83,18 @@ persona_product_manager_eval = (
     "You are an evaluation agent that checks the answers of other "
     "worker agents"
 )
+
 evaluation_criteria_product_manager = (
-    "The answer should be stories that follow the following structure: "
+    "The answer must contain one or more user stories. "
+    "Every user story must follow this exact structure:\n"
     "As a [type of user], I want [an action or feature] so that "
-    "[benefit/value]."
+    "[benefit/value].\n"
+    "Every story must clearly contain a user persona, a desired action or "
+    "feature, and a user benefit or value. Reject the answer if any story "
+    "does not follow this structure or contains functionality unrelated to "
+    "the product described in the provided product specification."
 )
+
 product_manager_evaluation_agent = EvaluationAgent(
     openai_api_key,
     persona_product_manager_eval,
@@ -80,13 +104,28 @@ product_manager_evaluation_agent = EvaluationAgent(
 )
 
 # Program Manager - Knowledge Augmented Prompt Agent
-persona_program_manager = "You are a Program Manager, you are responsible for defining the features for a product."
+persona_program_manager = (
+    "You are a Program Manager, you are responsible for defining the "
+    "features for a product."
+)
+
 knowledge_program_manager = (
-    "Features of a product are defined by organizing similar user stories "
-    "into cohesive groups. Define features only for the Email Router and "
-    "use only the following product specification:\n"
+    "Define product features only for the product described in the product "
+    "specification below.\n"
+    "Derive every feature directly from related capabilities and user needs "
+    "contained in the specification. Do not introduce unrelated or generic "
+    "features.\n"
+    "Every feature must use the following exact structure:\n"
+    "Feature Name: A clear and concise capability name\n"
+    "Description: The purpose of the feature\n"
+    "Key Functionality: The specific capabilities provided by the feature\n"
+    "User Benefit: The value created for the user\n"
+    "Do not define user profiles, social sharing, shopping carts, or other "
+    "capabilities unless they are explicitly supported by the specification.\n\n"
+    "Product specification:\n"
     + product_spec
 )
+
 # Instantiate a program_manager_knowledge_agent using 'persona_program_manager' and 'knowledge_program_manager'
 # (This is a necessary step before TODO 8. Students should add the instantiation code here.)
 program_manager_knowledge_agent = KnowledgeAugmentedPromptAgent(
@@ -96,7 +135,10 @@ program_manager_knowledge_agent = KnowledgeAugmentedPromptAgent(
 )
 
 # Program Manager - Evaluation Agent
-persona_program_manager_eval = "You are an evaluation agent that checks the answers of other worker agents."
+persona_program_manager_eval = (
+    "You are an evaluation agent that checks the answers of other "
+    "worker agents."
+)
 
 # TODO: 8 - Instantiate a program_manager_evaluation_agent using 'persona_program_manager_eval' and the evaluation criteria below.
 #                      "The answer should be product features that follow the following structure: " \
@@ -106,15 +148,20 @@ persona_program_manager_eval = "You are an evaluation agent that checks the answ
 #                      "User Benefit: How this feature creates value for the user"
 # For the 'agent_to_evaluate' parameter, refer to the provided solution code's pattern.
 evaluation_criteria_program_manager = (
-    "The answer should be product features that follow the following "
-    "structure: "
+    "The answer must contain one or more product features. "
+    "Every feature must use all four exact field names below, in this "
+    "exact order:\n"
     "Feature Name: A clear, concise title that identifies the capability\n"
     "Description: A brief explanation of what the feature does and its "
     "purpose\n"
     "Key Functionality: The specific capabilities or actions the feature "
     "provides\n"
-    "User Benefit: How this feature creates value for the user"
+    "User Benefit: How this feature creates value for the user\n"
+    "Reject the answer if any feature is missing one of these fields, "
+    "uses a different field name, or contains functionality unrelated to "
+    "the product described in the provided product specification."
 )
+
 program_manager_evaluation_agent = EvaluationAgent(
     openai_api_key,
     persona_program_manager_eval,
@@ -124,13 +171,51 @@ program_manager_evaluation_agent = EvaluationAgent(
 )
 
 # Development Engineer - Knowledge Augmented Prompt Agent
-persona_dev_engineer = "You are a Development Engineer, you are responsible for defining the development tasks for a product."
+persona_dev_engineer = (
+    "You are a Development Engineer, you are responsible for defining the "
+    "development tasks for a product."
+)
+
 knowledge_dev_engineer = (
-    "Development tasks are defined by identifying what needs to be built "
-    "to implement each user story. Define engineering tasks only for the "
-    "Email Router and use only the following product specification:\n"
+    "Development tasks are concrete, actionable units of engineering work "
+    "derived from the user stories, product features, and requirements in "
+    "the provided product specification.\n"
+    "Generate a comprehensive set of implementation tasks that covers the "
+    "major Email Router capabilities described in the specification. The "
+    "answer must contain multiple engineering tasks rather than only one "
+    "task.\n"
+    "Generate actual implementation tasks, not instructions, examples, "
+    "templates, acknowledgements, or explanations of how tasks should be "
+    "written.\n"
+    "If the input already contains valid engineering tasks, preserve every "
+    "valid task in the response. Do not discard, summarize, replace, or "
+    "respond conversationally to the supplied tasks. Return the complete "
+    "task list and add any missing tasks required for comprehensive product "
+    "coverage.\n"
+    "Every task must begin with the literal field name 'Task ID:' followed "
+    "by a unique identifier. Do not use headings such as 'Task 1' as a "
+    "replacement for 'Task ID:'.\n"
+    "Every task must contain the following exact field names in this exact "
+    "order:\n"
+    "Task ID: A unique identifier\n"
+    "Task Title: A concise description of the implementation work\n"
+    "Related User Story: The user story addressed by the task\n"
+    "Description: The detailed technical work required\n"
+    "Acceptance Criteria: Specific and verifiable completion requirements\n"
+    "Estimated Effort: A time or complexity estimate\n"
+    "Dependencies: Tasks or conditions that must be completed first\n"
+    "All seven fields must contain actual values. Do not return instructions "
+    "or descriptions of the required format.\n"
+    "The complete task list should cover the major areas supported by the "
+    "specification, including email ingestion and preprocessing, message "
+    "classification, knowledge retrieval, response generation, intelligent "
+    "routing, monitoring, configuration, testing, security, and deployment "
+    "when these areas are present in the specification.\n"
+    "Use only information from the following product specification. Do not "
+    "invent unrelated product capabilities, users, requirements, or tasks:\n"
     + product_spec
 )
+
 # Instantiate a development_engineer_knowledge_agent using 'persona_dev_engineer' and 'knowledge_dev_engineer'
 # (This is a necessary step before TODO 9. Students should add the instantiation code here.)
 development_engineer_knowledge_agent = KnowledgeAugmentedPromptAgent(
@@ -140,7 +225,11 @@ development_engineer_knowledge_agent = KnowledgeAugmentedPromptAgent(
 )
 
 # Development Engineer - Evaluation Agent
-persona_dev_engineer_eval = "You are an evaluation agent that checks the answers of other worker agents."
+persona_dev_engineer_eval = (
+    "You are an evaluation agent that checks the answers of other "
+    "worker agents."
+)
+
 # TODO: 9 - Instantiate a development_engineer_evaluation_agent using 'persona_dev_engineer_eval' and the evaluation criteria below.
 #                      "The answer should be tasks following this exact structure: " \
 #                      "Task ID: A unique identifier for tracking purposes\n" \
@@ -152,7 +241,12 @@ persona_dev_engineer_eval = "You are an evaluation agent that checks the answers
 #                      "Dependencies: Any tasks that must be completed first"
 # For the 'agent_to_evaluate' parameter, refer to the provided solution code's pattern.
 evaluation_criteria_dev_engineer = (
-    "The answer should be tasks following this exact structure: "
+    "The answer must contain a comprehensive list of multiple engineering "
+    "tasks for implementing the product described in the provided product "
+    "specification. Reject an answer that contains only one task when the "
+    "specification clearly requires multiple implementation areas.\n"
+    "Every task must use all seven exact field names below, in this exact "
+    "order:\n"
     "Task ID: A unique identifier for tracking purposes\n"
     "Task Title: Brief description of the specific development work\n"
     "Related User Story: Reference to the parent user story\n"
@@ -160,8 +254,16 @@ evaluation_criteria_dev_engineer = (
     "Acceptance Criteria: Specific requirements that must be met for "
     "completion\n"
     "Estimated Effort: Time or complexity estimation\n"
-    "Dependencies: Any tasks that must be completed first"
+    "Dependencies: Any tasks that must be completed first\n"
+    "Every field must contain a concrete value. Task IDs must be unique. "
+    "The tasks must be actionable and collectively cover the major product "
+    "capabilities represented in the supplied input and specification.\n"
+    "Reject the answer if valid tasks from the supplied input were discarded "
+    "without reason, if the response is merely an acknowledgement, template, "
+    "example, instruction, or explanation, or if any task is unrelated to "
+    "the product described in the provided product specification."
 )
+
 development_engineer_evaluation_agent = EvaluationAgent(
     openai_api_key,
     persona_dev_engineer_eval,
@@ -179,24 +281,31 @@ agents = [
     {
         "name": "Product Manager",
         "description": (
-            "Responsible for defining product personas and user stories "
-            "only. Does not define features or tasks. Does not group stories."
+            "Responsible only for identifying product user personas and "
+            "defining user stories from a product specification. User stories "
+            "contain a user type, desired action or feature, and resulting "
+            "benefit. Does not define features, group stories, or create "
+            "engineering tasks."
         ),
         "func": lambda query: product_manager_support_function(query)
     },
     {
         "name": "Program Manager",
         "description": (
-            "Responsible for defining product features by grouping related "
-            "user stories. Does not define user personas or engineering tasks."
+            "Responsible only for defining product features and grouping "
+            "related user stories or product capabilities into cohesive "
+            "features. Does not define user personas, write user stories, "
+            "or create engineering tasks."
         ),
         "func": lambda query: program_manager_support_function(query)
     },
     {
         "name": "Development Engineer",
         "description": (
-            "Responsible for defining detailed engineering tasks required "
-            "to implement user stories and product features."
+            "Responsible only for defining detailed technical engineering "
+            "tasks required to implement user stories and product features. "
+            "Defines acceptance criteria, effort, and dependencies. Does not "
+            "define user personas, user stories, or product features."
         ),
         "func": lambda query: development_engineer_support_function(query)
     }
@@ -244,19 +353,27 @@ def development_engineer_support_function(query):
 # Run the workflow
 
 print("\n*** Workflow execution started ***\n")
+
 # Workflow Prompt
 # ****
 workflow_prompt = (
-    "Create a complete development plan for the Email Router product. "
-    "First, define user stories based on the product specification. "
-    "Then, group the related user stories into product features. "
-    "Finally, define detailed engineering tasks for implementing each "
-    "user story and feature."
+    "Create a complete development plan for the product described in the "
+    "provided product specification. Produce exactly three major workflow "
+    "steps. First, define user stories based on the product specification. "
+    "Second, define product features based on related product capabilities "
+    "and user needs from the specification. Third, define detailed "
+    "engineering tasks for implementing the user stories and product "
+    "features. Do not divide these three major steps into smaller or "
+    "duplicate steps."
 )
 # ****
-print(f"Task to complete in this workflow, workflow prompt = {workflow_prompt}")
+
+print(
+    f"Task to complete in this workflow, workflow prompt = {workflow_prompt}"
+)
 
 print("\nDefining workflow steps from the workflow prompt")
+
 # TODO: 12 - Implement the workflow.
 #   1. Use the 'action_planning_agent' to extract steps from the 'workflow_prompt'.
 #   2. Initialize an empty list to store 'completed_steps'.
@@ -279,7 +396,10 @@ for step in workflow_steps:
 if completed_steps:
     print("\n*** Final workflow output ***\n")
 
-    for step_number, completed_step in enumerate(completed_steps, start=1):
+    for step_number, completed_step in enumerate(
+        completed_steps,
+        start=1
+    ):
         print(f"\n--- Completed Step {step_number} ---\n")
         print(completed_step)
 else:
